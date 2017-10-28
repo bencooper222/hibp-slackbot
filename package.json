@@ -1,0 +1,16 @@
+{
+  "name": "hibp-slackbot",
+  "version": "1.0.0",
+  "description": "A bot that alerts members of your Slack if their data has been exposed in breaches of online services.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": "https://github.com/bencooper222/hibp-slackbot.git",
+  "author": "Benjamin Cooper, Evan Sun & Brendan Batliner (2017)",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
