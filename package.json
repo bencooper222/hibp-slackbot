@@ -11,6 +11,7 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "botkit": "^0.6.4"
   }
 }
