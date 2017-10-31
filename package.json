@@ -1,0 +1,24 @@
+{
+  "name": "hibp-slackbot",
+  "version": "1.0.0",
+  "description": "Queries HIBP for Slack's users breach status",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bencooper222/hibp-slackbot.git"
+  },
+  "author": "Benjamin Cooper, Evan Sun and Brendan Batliner",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "botkit": "^0.6.4"
+  },
+  "bugs": {
+    "url": "https://github.com/bencooper222/hibp-slackbot/issues"
+  },
+  "homepage": "https://github.com/bencooper222/hibp-slackbot#readme",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
