@@ -55,47 +55,42 @@ module.exports = function(controller) {
             bot.reply(message, 'I will repeat whatever you say.')
         }
     });
-    controller.hears(['^kek'], 'direct_message,direct_mention', function(bot, message) {
+    controller.hears([ '^kek (.*)','^kek'], 'direct_message,direct_mention', function(bot, message) {
  
         // carefully examine and
         // handle the message here!
         // Note: Platforms such as Slack send many kinds of messages, not all of which contain a text field!
         let request  = require('request');
+        let email = "";
+        
+        if(message.match[1]){
+         email = message.match[1];
+        getPwned(email, bot, message);
+        }
+        else{
         let options = {
           url: "https://slack.com/api/users.profile.get?",
             headers: {
               'User-Agent': 'request'
             },
             qs:{
-              token:'xoxp-263583750562-264467272966-263730907538-a33c333aa29112685e44dbdebdaafa33',
+              token:'',
               user: message.user
           }}
         request(options, function(error, response,body){
-          
-          bot.reply(message, JSON.parse(body).profile.email);
-          let options = {
-            url: "https://haveibeenpwned.com/api/v2/breachedaccount/" +JSON.parse(body).profile.email,
-            headers: {
-              'User-Agent': 'request',
-              'truncateResponse':"true"
-            }
-          };
-          request(options, function(error, response, body){
-            if(body == ""){
-              bot.reply (message, "Congratulations! Your email doesn't appear in any of the breached data leaks. Interested in learning more?")
-            }
-            else{
-            bot.reply(message, "Oh no! Looks like your data has been leaked on the following sites...")
-            bot.reply(message, body)
-            }
-            }
-          ) 	
+
+          email = JSON.parse(body).profile.email;
+          getPwned(email, bot, message);
+        })
+
+ 
+        }
+      
           
 
         // carefully examine and
         // handle the message here!
         // Note: Platforms such as Slack send many kinds of messages, not all of which contain a text field!
-    })
     });
 
 
@@ -128,5 +123,35 @@ module.exports = function(controller) {
         uptime = parseInt(uptime) + ' ' + unit;
         return uptime;
     }
+  function getPwned(email, bot, message){
+    let request  = require('request');
+    if(email !=""){
+      let urls = "https://haveibeenpwned.com/api/v2/breachedaccount/" + email;
+      bot.reply(message, urls);
+        let options = {
+            url: urls,
+            headers: {
+              'User-Agent': 'request'
+            },
+          qs:{
+          'truncateResponse':"true"
+        }
+        };
+          request(options, function(error, response, body){
+            bot.reply(message, body);
+            if(body == ""){
+              bot.reply (message, "Congratulations! Your email doesn't appear in any of the breached data leaks. Interested in learning more?")
+            }
+            else{
+            bot.reply(message, "Oh no! Looks like your data has been leaked on the following sites...")
+            bot.reply(message, body)
+            }
+            }
+          ) 	
+      }
+      else{
+        bot.reply(message, "Oh no! Apparently there's been an error with the program :(");
+      }
+  }
 
 ;
