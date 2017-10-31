@@ -4,7 +4,7 @@ module.exports = function(controller) {
  
         // carefully examine and
         // handle the message here!
-        // Note: Platforms such as Slack send many kinds of messages, not all of which contain a text field!
+        // Note: Platforms such as Slack send many kinds of messages, not all of which contain a text field!\
         let request  = require('request');
         let email = "";
         if(message.match[1]){
@@ -13,19 +13,16 @@ module.exports = function(controller) {
         getPwned(email, bot, message);
         }
         else{
+        let userID = message.user;
         let options = {
-          url: "https://slack.com/api/users.profile.get?",
-            headers: {
-              'User-Agent': 'request'
-            },
-            qs:{
-              token:'xoxb-263869688373-2ct2v1S4sEnkIFPLKYRl7DNF',
-              user: message.user
+          url: "https://slack.com/api/users.info?",
+          qs:{
+              token:'xoxp-263583750562-264467272966-265282441799-fca1528644fad464d17f5b27a3c41df0',
+              user: userID
           }}
         request(options, function(error, response,body){
-          bot.reply(body);
-          email = JSON.parse(body).profile.email;
-          bot.reply(message,email);
+          bot.reply(message, body);
+          email = JSON.parse(body).user.profile.email;
           getPwned(email, bot, message);
         })
 
@@ -91,8 +88,7 @@ module.exports = function(controller) {
     }
   function getPwned(email, bot, message){
     let request  = require('request');
-    if(email !=""){
-      bot.reply(message, email);
+    if(email !="" && email != 'undefined'){
       let urls = "https://haveibeenpwned.com/api/v2/breachedaccount/" + email;
         let options = {
             url: urls,
@@ -100,16 +96,19 @@ module.exports = function(controller) {
               'User-Agent': 'request'
             },
           qs:{
-          'truncateResponse':"true"
+
         }
         };
           request(options, function(error, response, body){
+            
             if(body == ""){
               bot.reply (message, "Congratulations! Your email doesn't appear in any of the breached data leaks. Interested in learning more?")
             }
             else{
-            bot.reply(message, body)
             bot.reply(message, "Oh no! Looks like your data has been leaked on the following sites...")
+            let i=0;
+            bot.reply(message, body[0]);
+            
           
             }
             }
