@@ -105,9 +105,20 @@ module.exports = function(controller) {
               bot.reply (message, "Congratulations! Your email doesn't appear in any of the breached data leaks. Interested in learning more?")
             }
             else{
-            bot.reply(message, "Oh no! Looks like your data has been leaked on the following sites...")
             let i=0;
-            bot.reply(message, body[0]);
+            let arr = JSON.parse(body);
+            for(i=0;i<arr.length; i++){
+              var slackify = require('slackify-html');
+              let title = arr[i].Name;
+              let domain = slackify(arr[i].Domain);
+              let date= arr[i].BreachDate;
+              let description = slackify(arr[i].Description);
+              
+              let outputString = "Title: " +  title + "\nDomain: " + domain + "\nDate: " + date + "\nDescription: " + description;
+              bot.reply(message, outputString)
+            }
+              bot.reply(message, "Oh no! Looks like your data has been leaked on the following sites...")
+
             
           
             }
