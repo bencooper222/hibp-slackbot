@@ -36,7 +36,7 @@ module.exports = function(controller) {
                                         }
                                     }
                                         request.post(options, function(error, response,body){
-                                          convo.say("If you're interested in learning more, please visit haveibeenpwned.com");
+                                          convo.say("If you're interested in learning more, please visit haveibeenpwned.com. Interested in knowing what else I do? Type 'help' to get my list of features!");
                                         })
                     }
                 });
@@ -105,7 +105,9 @@ module.exports = function(controller) {
             })
         }
     });
-
+    controller.hears(['^help', '^instructions'], 'direct_message,direct_mention', function(bot, message) {
+        bot.reply(message, "Hello! I'm pwnbot and my job is to help you ensure that your emails weren't a part of any data breaches. I pull from haveibeenpwned.com and include a number of features...\nSimply message me the word *\'pwned\'*, and I'll check the email associated with this account. If you're interested in checking another email, simply message me *\'pwned <insert email here>\'*, and I'll get right to it. \nIf you would like to run a check of all emails associated with users in this Slack (warning: this make take a while!), simply message me *'allPwned'*.");
+    })
     controller.hears(['allPwned'], 'direct_message,direct_mention', function(bot, message) {
         bot.reply(message, "Scan has begun");
         let request = require('request');
