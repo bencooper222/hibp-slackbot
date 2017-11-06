@@ -9,6 +9,7 @@ module.exports = function(controller) {
             user: message.user.id
         }, function(err, convo) {
             convo.say('Welcome, <@' + message.user.id + '>! My name is PwnBot, and it\'s my job to tell you whether your email has been leaked in any recent data breaches. Give me one second...');
+            convo.next();
             let options = {
                 url: "https://slack.com/api/users.info?",
                 headers: {
@@ -23,6 +24,7 @@ module.exports = function(controller) {
                 email = JSON.parse(body).user.profile.email;
                 getPwned(email, function(result, data) {
                     convo.say(result);
+                    convo.next();
                     if(data != ""){
                         let options = {
                                         headers: {'content-type' : 'application/x-www-form-urlencoded'},
@@ -30,13 +32,15 @@ module.exports = function(controller) {
                                         formData: {content:data},
                                         qs: {
                                             token: botToken,
-                                            channels: message.user,
+                                            channels: message.user.id,
                                             filename: "results.txt",
                                             filetype:'text'
                                         }
                                     }
                                         request.post(options, function(error, response,body){
+                                          convo.next();
                                           convo.say("If you're interested in learning more, please visit haveibeenpwned.com. Interested in knowing what else I do? Type 'help' to get my list of features!");
+                                          convo.next();
                                         })
                     }
                 });
@@ -221,7 +225,7 @@ module.exports = function(controller) {
                                         user: element
                                     }, function(err, convo1) {
                                         
-                                        convo1.say("Hi, <@" + message.user + "> has requested a pwned scan of all the users in this Slack. Unfortunately, your email has been found in the following data leaks...\n")
+                                        convo1.say("Hi, <@" + message.user + "> has requested a pwned scan of all the users in this Slack. Unfortunately, your email has been found in the above data leaks.\n")
                                         
                                         let options = {
                                         headers: {'content-type' : 'application/x-www-form-urlencoded'},
@@ -229,7 +233,7 @@ module.exports = function(controller) {
                                         formData: {content:dirtyUserData[element]},
                                         qs: {
                                             token: botToken,
-                                            channels: message.user,
+                                            channels: element,
                                             filename: "results.txt",
                                             filetype:'text'
                                         }
