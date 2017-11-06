@@ -48,7 +48,7 @@ module.exports = function(webserver, controller) {
                     // a botkit event here with the payload so it can be handled
                     // by the developer without meddling with the actual oauth route.
 
-                    auth.identity = identity;
+                    auth.identity = identity;https://api.slack.com/docs/oauth
                     controller.trigger('oauth:success', [auth]);
 
                     res.cookie('team_id', auth.team_id);
